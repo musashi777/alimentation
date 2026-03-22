@@ -1,0 +1,21 @@
+{
+  "name": "A 'LIM G - Aubagne",
+  "short_name": "A 'LIM G",
+  "description": "Alimentation et Livraison de nuit à Aubagne",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#10B981",
+  "icons": [
+    {
+      "src": "/images/facade.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/images/facade.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

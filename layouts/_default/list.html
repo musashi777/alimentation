@@ -1,0 +1,142 @@
+{{ define "main" }}
+<div class="container">
+  <section class="hero">
+    <div class="alert-banner">
+        🚨 BOUTIQUE FERMÉE À 22H / LIVRAISON DISPONIBLE TOUTE LA NUIT
+    </div>
+    <div id="status-indicator" class="status-offline">
+        <span class="dot"></span> <span id="status-text">Vérification...</span>
+    </div>
+    <h1>La Nuit Continue avec A 'LIM G Aubagne.</h1>
+    <p>Ne coupez pas votre élan : Packs Mixologie, Snacking et Épicerie livrés en 15 min.</p>
+  </section>
+
+  <!-- NOUVEAU : Hub d'Exploration Visuel -->
+  <div class="category-hub">
+    <h2 class="section-subtitle">Explorer les rayons</h2>
+    <div class="hub-grid">
+      {{ $categories := slice }}
+      {{ range .Site.Data.products.records }}
+        {{ $categories = $categories | append .fields.Categorie }}
+      {{ end }}
+      {{ range ($categories | uniq) }}
+        <a href="#rayon-{{ . | urlize }}" class="hub-card" data-cat="{{ . | urlize }}">
+          <span class="hub-icon">
+            {{ if eq . "Boissons Fraîches" }}🍺{{ end }}
+            {{ if eq . "Apéro & Chips" }}🍟{{ end }}
+            {{ if eq . "Glaces & Fraîcheur" }}🍦{{ end }}
+            {{ if eq . "Comptoir" }}🔥{{ end }}
+          </span>
+          <span class="hub-label">{{ . }}</span>
+        </a>
+      {{ end }}
+    </div>
+  </div>
+
+  <!-- Barre de Rayons Sticky (S'affiche au scroll) -->
+  <div class="filter-bar" id="filter-bar">
+    <a href="#rayon-all" class="filter-btn active">Tout</a>
+    {{ range ($categories | uniq) }}
+      <a href="#rayon-{{ . | urlize }}" class="filter-btn">
+        {{ if eq . "Boissons Fraîches" }}🍺{{ end }}
+        {{ if eq . "Apéro & Chips" }}🍟{{ end }}
+        {{ if eq . "Glaces & Fraîcheur" }}🍦{{ end }}
+        {{ if eq . "Comptoir" }}🔥{{ end }}
+        {{ . }}
+      </a>
+    {{ end }}
+  </div>
+
+  <div class="store-layout">
+    {{ $all_products := .Site.Data.products.records }}
+    {{ range ($categories | uniq) }}
+    {{ $current_cat := . }}
+    <section id="rayon-{{ . | urlize }}" class="category-section">
+      <h2 class="category-title">
+        {{ if eq . "Boissons Fraîches" }}🍺{{ end }}
+        {{ if eq . "Apéro & Chips" }}🍟{{ end }}
+        {{ if eq . "Glaces & Fraîcheur" }}🍦{{ end }}
+        {{ if eq . "Comptoir" }}🔥{{ end }}
+        {{ . }}
+      </h2>
+      <div class="product-grid">
+        {{ range $all_products }}
+          {{ if eq .fields.Categorie $current_cat }}
+          <div class="product-card" data-id="{{ .id }}">
+            {{ if .fields.Tag }}
+            <span class="badge">{{ .fields.Tag }}</span>
+            {{ end }}
+            <div class="product-image" style="background-image: url('{{ .fields.Image }}')"></div>
+            <div class="product-info">
+              <h3>{{ .fields.Nom }}</h3>
+              {{ if .fields.Description }}
+              <p class="description">{{ .fields.Description }}</p>
+              {{ end }}
+              <p class="price">{{ printf "%.2f" .fields.Prix }}€ / {{ .fields.Unite }}</p>
+              <button class="add-to-cart" 
+                      data-id="{{ .id }}" 
+                      data-name="{{ .fields.Nom }}" 
+                      data-price="{{ .fields.Prix }}">
+                Ajouter
+              </button>
+            </div>
+          </div>
+          {{ end }}
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+  </div>
+</div>
+
+<div id="cart-summary" class="cart-hidden">
+  <div class="cart-content">
+    <h3>🛒 Votre Panier</h3>
+    <ul id="cart-items"></ul>
+    
+    <div class="order-type-selector">
+      <p>📝 Comment souhaitez-vous récupérer votre commande ?</p>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="order-type" value="delivery" checked>
+          <span>🚚 Livraison</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="order-type" value="pickup">
+          <span>🏃 Récupérer sur place (Aubagne)</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="delivery-info" id="address-section">
+      <p>📍 Votre adresse pour la livraison :</p>
+      <input type="text" id="delivery-address" placeholder="Rue, Étage, Code porte..." class="address-input">
+    </div>
+
+    <div class="cart-suggestions">
+      <p>💡 Complétez votre commande :</p>
+      <div class="suggestion-chips">
+        <button class="add-to-cart chip" data-id="rec_coco_1" data-name="Boisson Coco 33cl" data-price="1.50">🥤 +1.50€ Coco</button>
+        <button class="add-to-cart chip" data-id="rec_clip_1" data-name="Briquet Clipper" data-price="2.00">🔥 +2.00€ Briquet</button>
+      </div>
+    </div>
+
+    <div class="cart-total">Total: <span id="total-price">0.00</span>€</div>
+    <button id="checkout-whatsapp" class="btn-whatsapp">Commander sur WhatsApp</button>
+    <button id="close-cart">Fermer</button>
+  </div>
+</div>
+
+<!-- Modal de Parrainage Social -->
+<div id="share-modal" class="modal-hidden">
+  <div class="modal-content">
+    <span class="confetti">🎉</span>
+    <h2>Merci pour votre commande !</h2>
+    <p>Votre message WhatsApp a été préparé.</p>
+    <hr>
+    <p class="share-text">Vous voulez nous soutenir ? Partagez notre boutique sur votre <b>Statut WhatsApp</b> :</p>
+    <button id="share-on-whatsapp" class="btn-share">📢 Partager sur mon Statut</button>
+    <button id="close-share" class="btn-secondary">Pas maintenant</button>
+  </div>
+</div>
+{{ end }}

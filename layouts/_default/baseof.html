@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    
+    <!-- PWA Config -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#111827">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/images/facade.jpg">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="age-gate" class="modal-hidden">
+        <div class="modal-content">
+            <span class="icon">🔞</span>
+            <h2>Vérification de l'Âge</h2>
+            <p>Ce site contient des produits alcoolisés. Vous devez avoir <b>18 ans ou plus</b> pour y accéder.</p>
+            <button id="age-confirm" class="btn-share">J'ai 18 ans ou +</button>
+            <button id="age-deny" class="btn-secondary">Je n'ai pas l'âge</button>
+        </div>
+    </div>
+
+    <div class="top-banner">
+        <span>🏃💨 Commande prête en 15 min ! Cliquez, passez, récupérez.</span>
+    </div>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">A 'LIM G - Aubagne</h1>
+        </div>
+    </header>
+
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <!-- Barre de Navigation Mobile -->
+    <nav class="bottom-nav">
+        <a href="/" class="nav-item active">
+            <span class="icon">🏠</span>
+            <span class="label">Accueil</span>
+        </a>
+        <a href="#filter-bar" class="nav-item">
+            <span class="icon">📂</span>
+            <span class="label">Rayons</span>
+        </a>
+        <div class="nav-item" id="open-cart-mobile">
+            <div class="cart-badge-container">
+                <span class="icon">🛒</span>
+                <span id="cart-count" class="badge-count">0</span>
+            </div>
+            <span class="label">Panier</span>
+        </div>
+    </nav>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now.Format "2006" }} A 'LIM G Aubagne. Votre épicerie de nuit.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

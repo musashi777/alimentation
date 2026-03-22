@@ -1,0 +1,32 @@
+{
+  "_comment": "=============================================================================
+  CONFIGURATION VERCEL - DÉPLOIEMENT ET FONCTIONS SERVERLESS
+  =============================================================================
+  Ce fichier configure le déploiement sur Vercel, incluant les fonctions
+  serverless pour l'API, la mémoire allouée et les rewrites d'URL.
+  =============================================================================",
+  
+  "version": 2,
+  "framework": "hugo",
+  
+  "functions": {
+    "_comment_functions": "Configuration des fonctions serverless dans le dossier api/",
+    "api/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  
+  "rewrites": [
+    {
+      "_comment_rewrites": "Redirection des requêtes /api/* vers les fonctions serverless",
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ],
+  
+  "env": {
+    "_comment_env": "Version de Hugo utilisée pour le build",
+    "HUGO_VERSION": "0.92.2"
+  }
+}

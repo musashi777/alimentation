@@ -1,0 +1,8 @@
+baseURL = "/"
+languageCode = "fr-fr"
+title = "A 'LIM G - Alimentation & Livraison Aubagne"
+
+[params]
+  description = "A 'LIM G - Votre alimentation de proximité à Aubagne. Boissons, Snacking, Glaces et Livraison de nuit."
+  # Remplacez par votre vrai numéro (format international sans le +)
+  whatsapp_number = "33600000000" 

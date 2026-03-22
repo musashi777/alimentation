@@ -1,0 +1,31 @@
+# =============================================================================
+# CONFIGURATION PRINCIPALE DU SITE HUGO
+# =============================================================================
+# Ce fichier contient les paramètres de base du site vitrine d'alimentation.
+# Hugo utilise ce fichier pour générer le site statique.
+# =============================================================================
+
+# URL de base du site ("/" pour le développement local)
+baseURL = "/"
+
+# Code de langue du site (français - France)
+languageCode = "fr-fr"
+
+# Titre du site affiché dans l'onglet du navigateur et le header
+title = "Alimentation JAMstack"
+
+# Thème Hugo utilisé (vide car nous utilisons des layouts personnalisés)
+theme = ""
+
+# =============================================================================
+# PARAMÈTRES PERSONNALISÉS
+# =============================================================================
+# Ces paramètres sont accessibles dans les templates via .Site.Params
+# =============================================================================
+[params]
+  # Description du site pour le SEO
+  description = "Site vitrine ultra-rapide pour commerce d'alimentation"
+  
+  # Numéro WhatsApp pour les commandes (format international sans le +)
+  # REMPLACER par votre vrai numéro : 33612345678 pour +33 6 12 34 56 78
+  whatsapp_number = "33600000000"

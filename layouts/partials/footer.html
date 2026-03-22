@@ -1,0 +1,16 @@
+<!--
+  =============================================================================
+  FOOTER PARTIEL - FOOTER.HTML
+  =============================================================================
+  Ce fichier contient le pied de page du site affiché sur toutes les pages.
+  Il affiche les informations de copyright et les crédits techniques.
+  Ce partial est inclus dans baseof.html.
+  =============================================================================
+-->
+<footer>
+    <!-- Copyright dynamique avec l'année actuelle -->
+    <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}. Tous droits réservés.</p>
+    
+    <!-- Crédits techniques -->
+    <p>Site vitrine ultra-rapide propulsé par Hugo et Vercel.</p>
+</footer>

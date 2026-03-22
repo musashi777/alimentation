@@ -1,0 +1,18 @@
+1. Les Faits Sourcés
+| Catégorie | Marque (Estimée) | Produit / Variété | Emplacement Visuel |
+|---|---|---|---|
+| Snacking Salé | Takis | Fuego (Rouge), Blue Heat (Bleu), Nitro (Jaune) | Tête de gondole gauche |
+| Snacking Salé | Baff | Popcorn Caramel / Salé | Étagère gauche, bas |
+| Snacking Salé | Pringles | Tuiles Original, Paprika, Sour Cream | Étagère droite, milieu |
+| Confiserie | Chupa Chups | Présentoir tournant sucettes | Comptoir caisse |
+| Confiserie | Fini | Sachets gommes (Roller, divers) | Présentoir comptoir |
+| Chocolat | Mars / Wrigley | M&M's (Peanut/Choco), Snickers, Twix | Étagère gauche, bas |
+| Petit-Déjeuner | Kellogg's | Trésor, Frosties, Smacks, Miel Pops | Étagère droite, haut |
+| Petit-Déjeuner | Nestlé | Chocapic, Lion, Nesquik | Étagère droite, haut |
+| Petit-Déjeuner | Nescafé | Café soluble (Bocaux verre) | Étagère droite, haut |
+| Biscuiterie | Mondelez / Lu | Oreo, Granola, Milka | Étagère droite, milieu |
+| Boulangerie | Harrys / Pasquier | Pain de mie, Briochettes | Étagère droite, milieu |
+| Épicerie Salée | Barilla | Pâtes (Boîtes carton bleu) | Étagère droite, bas |
+| Épicerie Salée | Panzani | Pâtes (Sachets plastique) | Étagère droite, bas |
+| Conserves | Divers | Maïs, Haricots, Petits pois, Raviolis | Étagère droite, bas |
+| Accessoires | Bic / Clipper | Briquets (Présentoir vertical) | Comptoir ca. Section Critique 

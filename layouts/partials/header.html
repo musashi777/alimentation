@@ -1,0 +1,22 @@
+<!--
+  =============================================================================
+  HEADER PARTIEL - HEADER.HTML
+  =============================================================================
+  Ce fichier contient l'en-tête du site affiché sur toutes les pages.
+  Il inclut le logo/nom du site et la navigation principale.
+  Ce partial est inclus dans baseof.html.
+  =============================================================================
+-->
+<header>
+    <nav>
+        <!-- Logo / Nom du site - lien vers l'accueil -->
+        <a href="/">{{ .Site.Title }}</a>
+        
+        <!-- Menu de navigation principal -->
+        <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="#products">Produits</a></li>
+            <li><a href="#cart-summary">Panier</a></li>
+        </ul>
+    </nav>
+</header>
