@@ -27,6 +27,6 @@
   
   "env": {
     "_comment_env": "Version de Hugo utilisée pour le build",
-    "HUGO_VERSION": "0.92.2"
+    "HUGO_VERSION": "0.123.8"
   }
 }
