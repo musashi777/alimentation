@@ -66,6 +66,7 @@
         </div>
     </footer>
 
-    <script src="/js/main.js"></script>
+    {{ $js := resources.Get "js/cart.js" | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}"></script>
 </body>
 </html>

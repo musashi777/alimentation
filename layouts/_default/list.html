@@ -1,6 +1,24 @@
 {{ define "main" }}
+<!-- Injection des données locales pour Fallback O(1) -->
+<script>
+    window.HUGO_PRODUCTS = [
+        {{ range .Site.Data.products.records }}
+        {
+            id: {{ .id }},
+            name: {{ .fields.Nom }},
+            price: {{ .fields.Prix }},
+            unite: {{ .fields.Unite }},
+            category: {{ .fields.Categorie }},
+            tag: {{ .fields.Tag | default "" }},
+            description: {{ .fields.Description | default "" }},
+            image: {{ .fields.Image }}
+        },
+        {{ end }}
+    ];
+</script>
+
 <div class="container">
-  <section class="hero">
+  <section id="rayon-all" class="hero category-section">
     <div class="alert-banner">
         🚨 BOUTIQUE FERMÉE À 22H / LIVRAISON DISPONIBLE TOUTE LA NUIT
     </div>
@@ -60,29 +78,11 @@
         {{ . }}
       </h2>
       <div class="product-grid">
-        {{ range $all_products }}
-          {{ if eq .fields.Categorie $current_cat }}
-          <div class="product-card" data-id="{{ .id }}">
-            {{ if .fields.Tag }}
-            <span class="badge">{{ .fields.Tag }}</span>
-            {{ end }}
-            <div class="product-image" style="background-image: url('{{ .fields.Image }}')"></div>
-            <div class="product-info">
-              <h3>{{ .fields.Nom }}</h3>
-              {{ if .fields.Description }}
-              <p class="description">{{ .fields.Description }}</p>
-              {{ end }}
-              <p class="price">{{ printf "%.2f" .fields.Prix }}€ / {{ .fields.Unite }}</p>
-              <button class="add-to-cart" 
-                      data-id="{{ .id }}" 
-                      data-name="{{ .fields.Nom }}" 
-                      data-price="{{ .fields.Prix }}">
-                Ajouter
-              </button>
-            </div>
-          </div>
-          {{ end }}
-        {{ end }}
+        <!-- Skeletons de chargement (Remplacés par le JS) -->
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
       </div>
     </section>
     {{ end }}
@@ -92,6 +92,13 @@
 <div id="cart-summary" class="cart-hidden">
   <div class="cart-content">
     <h3>🛒 Votre Panier</h3>
+    
+    <!-- État Vide du Panier -->
+    <div id="empty-cart" class="empty-cart-state hidden">
+      <span class="empty-cart-icon">🛒</span>
+      <p>Votre panier est vide pour le moment.</p>
+    </div>
+
     <ul id="cart-items"></ul>
     
     <div class="order-type-selector">

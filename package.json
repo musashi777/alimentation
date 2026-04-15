@@ -1,26 +1,16 @@
 {
-  "_comment": "=============================================================================
-  FICHIER DE CONFIGURATION NPM - GESTION DES DÉPENDANCES
-  =============================================================================
-  Ce fichier définit les dépendances Node.js nécessaires pour les fonctions
-  serverless Vercel (API). Le paquet 'node-fetch' est requis pour faire des
-  requêtes HTTP vers l'API Airtable depuis les fonctions serverless.
-  =============================================================================",
-  
   "name": "alimentation-jamstack",
   "version": "1.0.0",
   "description": "Site vitrine JAMstack pour commerce d'alimentation",
-  
   "scripts": {
-    "_comment_build": "Commande pour générer le site statique avec Hugo",
     "build": "hugo",
-    
-    "_comment_dev": "Commande pour lancer le serveur de développement Hugo",
-    "dev": "hugo server -D"
+    "dev": "hugo server -D",
+    "migrate": "node scripts/migrate.js"
   },
-  
   "dependencies": {
-    "_comment_node_fetch": "Bibliothèque pour effectuer des requêtes HTTP (nécessaire pour Airtable)",
     "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2"
   }
 }
