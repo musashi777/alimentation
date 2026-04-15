@@ -8,6 +8,8 @@
   
   "version": 2,
   "framework": "hugo",
+  "buildCommand": "hugo --gc --minify",
+  "outputDirectory": "public",
   
   "functions": {
     "_comment_functions": "Configuration des fonctions serverless dans le dossier api/",
