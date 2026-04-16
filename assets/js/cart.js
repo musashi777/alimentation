@@ -24,11 +24,11 @@ const Store = {
         localStorage.setItem(this.config.storageKey, JSON.stringify(Object.fromEntries(this.items)));
     },
 
-    add(id, name, price) {
+    add(id, name, price, image) {
         if (this.items.has(id)) {
             this.items.get(id).quantity += 1;
         } else {
-            this.items.set(id, { name, price, quantity: 1 });
+            this.items.set(id, { name, price, image, quantity: 1 });
         }
         this.save();
     },
@@ -66,13 +66,13 @@ const Store = {
         // Génération de suggestions intelligentes
         let suggestions = [];
         if (hasAlcohol && !this.items.has('soda_1')) {
-            suggestions.push({ id: 'soda_1', name: 'Coca-Cola 1.5L', price: 4.50, icon: '🥤' });
+            suggestions.push({ id: 'soda_1', name: 'Coca-Cola 1.5L', price: 4.50, icon: '🥤', image: '/images/facade.jpg' });
         }
         if (hasSnack && !this.items.has('beer_1')) {
-            suggestions.push({ id: 'beer_1', name: 'Heineken x6', price: 11.50, icon: '🍺' });
+            suggestions.push({ id: 'beer_1', name: 'Heineken x6', price: 11.50, icon: '🍺', image: '/images/facade.jpg' });
         }
         if (total > 0 && !this.items.has('home_1')) {
-            suggestions.push({ id: 'home_1', name: 'Briquet BIC', price: 2.50, icon: '🔥' });
+            suggestions.push({ id: 'home_1', name: 'Briquet BIC', price: 2.50, icon: '🔥', image: '/images/facade.jpg' });
         }
 
         return { cartArray, total, suggestions };
@@ -141,7 +141,7 @@ const UI = {
                 ${p.description ? `<p class="description">${p.description}</p>` : ''}
                 <p class="price">${p.price.toFixed(2)}€ / ${p.unite}</p>
                 <button class="add-to-cart" 
-                        onclick="App.addToCart('${p.id}', '${p.name}', ${p.price})">
+                        onclick="App.addToCart('${p.id}', '${p.name}', ${p.price}, '${imgSrc}')">
                     Ajouter
                 </button>
             </div>
@@ -163,6 +163,7 @@ const UI = {
         if (list) {
             list.innerHTML = cartArray.map(i => `
                 <li class="cart-item">
+                    <img src="${i.image || '/images/facade.jpg'}" class="cart-item-img" alt="${i.name}">
                     <div class="cart-item-info">
                         <span class="cart-item-name">${i.name}</span>
                         <span class="cart-item-price">${(i.price * i.quantity).toFixed(2)}€</span>
@@ -181,7 +182,7 @@ const UI = {
             if (suggestions.length > 0) {
                 suggestionBox.innerHTML = suggestions.map(s => `
                     <button class="add-to-cart chip" 
-                            onclick="App.addToCart('${s.id}', '${s.name}', ${s.price})">
+                            onclick="App.addToCart('${s.id}', '${s.name}', ${s.price}, '${s.image}')">
                         ${s.icon} +${s.price.toFixed(2)}€ ${s.name}
                     </button>
                 `).join('');
@@ -269,8 +270,14 @@ const App = {
     },
 
     updateQty(id, delta) {
-        if (delta > 0) Store.add(id);
-        else Store.decrease(id);
+        if (!Store.items.has(id)) return;
+        
+        if (delta > 0) {
+            const item = Store.items.get(id);
+            Store.add(id, item.name, item.price, item.image);
+        } else {
+            Store.decrease(id);
+        }
         UI.updateCartUI();
     },
 
@@ -301,11 +308,26 @@ const App = {
         }
     },
 
-    addToCart(id, name, price) {
-        Store.add(id, name, price);
+    addToCart(id, name, price, image) {
+        Store.add(id, name, price, image);
         UI.updateCartUI();
         UI.showToast(`${name} ajouté !`);
+        
+        // Ouverture animée du panier
         document.getElementById('cart-summary')?.classList.remove('cart-hidden');
+        document.getElementById('cart-overlay')?.classList.remove('cart-overlay-hidden');
+        
+        // Micro-interaction sur le bouton
+        const btn = document.querySelector(`.product-card[data-id="${id}"] .add-to-cart`);
+        if (btn) {
+            const originalText = btn.textContent;
+            btn.textContent = "C'est dans le panier ! ✅";
+            btn.classList.add('success');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('success');
+            }, 1500);
+        }
     },
 
     checkAgeGate() {
@@ -353,6 +375,7 @@ const App = {
                 setTimeout(() => {
                     document.getElementById('share-modal')?.classList.remove('modal-hidden');
                     document.getElementById('cart-summary')?.classList.add('cart-hidden');
+                    document.getElementById('cart-overlay')?.classList.add('cart-overlay-hidden');
                 }, 1000);
             }
         } catch (e) {
@@ -361,14 +384,20 @@ const App = {
     },
 
     bindEvents() {
-        // Navigation mobile
-        document.getElementById('open-cart-mobile')?.addEventListener('click', () => {
-            document.getElementById('cart-summary')?.classList.remove('cart-hidden');
-        });
-
-        document.getElementById('close-cart')?.addEventListener('click', () => {
+        const closeCart = () => {
             document.getElementById('cart-summary')?.classList.add('cart-hidden');
-        });
+            document.getElementById('cart-overlay')?.classList.add('cart-overlay-hidden');
+        };
+
+        const openCart = () => {
+            document.getElementById('cart-summary')?.classList.remove('cart-hidden');
+            document.getElementById('cart-overlay')?.classList.remove('cart-overlay-hidden');
+        };
+
+        // Navigation mobile
+        document.getElementById('open-cart-mobile')?.addEventListener('click', openCart);
+        document.getElementById('close-cart')?.addEventListener('click', closeCart);
+        document.getElementById('cart-overlay')?.addEventListener('click', closeCart);
 
         // Toggle Adresse et Option Drive
         document.querySelectorAll('input[name="order-type"]').forEach(r => {

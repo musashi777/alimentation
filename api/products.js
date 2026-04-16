@@ -15,17 +15,20 @@ module.exports = async (req, res) => {
     
     const data = await response.json();
 
+    // Cache Vercel : 60s frais, 1h en arrière-plan (stale-while-revalidate)
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=3600');
+
     const products = (data.records || []).filter(r => r.fields.Nom).map(record => {
       const f = record.fields;
-      const photo = f.Photo || f.Image;
+      let img = f.Image || '/images/facade.jpg';
       
-      // LOGIQUE O(1) : On construit le chemin local si une pièce jointe existe
-      // L'utilisateur doit simplement uploader dans static/images avec le même nom
-      let imageUrl = '/images/facade.jpg'; 
-      if (Array.isArray(photo) && photo[0]) {
-        imageUrl = `/images/${photo[0].filename}`;
-      } else if (typeof photo === 'string') {
-        imageUrl = photo.startsWith('http') ? photo : `/images/${photo}`;
+      // Si l'image est un ID Unsplash ou un chemin inconnu, on s'assure qu'elle pointe vers static/images
+      // ou on utilise un fallback si le fichier n'est pas dans notre liste connue
+      const knownImages = ['Briquet_Clipper.png', 'Mogu_Mogu_Fraise.png', 'Red_Bull_Original.png', 'pack-bleu.jpg', 'takis-blue-heat.png'];
+      const fileName = img.split('/').pop();
+      
+      if (!img.startsWith('http') && !knownImages.includes(fileName) && fileName !== 'facade.jpg') {
+        img = '/images/facade.jpg'; // Fallback de sécurité
       }
 
       return {
@@ -36,7 +39,7 @@ module.exports = async (req, res) => {
         category: f.Categorie || 'Général',
         tag: f.Tag || '',
         description: f.Description || '',
-        image: imageUrl
+        image: img
       };
     });
 
