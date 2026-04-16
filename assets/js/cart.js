@@ -124,10 +124,14 @@ const UI = {
         .replace(/-+/g, '-')
         .normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
 
-    productTemplate: (p) => `
+    productTemplate: (p) => {
+        // Anti-cache pour les images pendant les tests (optionnel, mais utile ici)
+        const imgSrc = p.image.startsWith('/images/') ? p.image : p.image;
+        
+        return `
         <div class="product-card" data-id="${p.id}">
             ${p.tag ? `<span class="badge">${p.tag}</span>` : ''}
-            <div class="product-image" style="background-image: url('${p.image}')"></div>
+            <div class="product-image" style="background-image: url('${imgSrc}'); background-size: cover; background-position: center;"></div>
             <div class="product-info">
                 <h3>${p.name}</h3>
                 ${p.description ? `<p class="description">${p.description}</p>` : ''}
@@ -138,7 +142,8 @@ const UI = {
                 </button>
             </div>
         </div>
-    `,
+    `;
+    },
 
     updateCartUI() {
         const { cartArray, total, suggestions } = Store.getSummary();
