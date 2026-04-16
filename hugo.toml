@@ -1,6 +1,7 @@
 baseURL = "/"
 languageCode = "fr-fr"
 title = "A 'LIM G - Alimentation & Livraison Aubagne"
+staticDir = ["static"]
 
 [params]
   description = "A 'LIM G - Votre alimentation de proximité à Aubagne. Boissons, Snacking, Glaces et Livraison de nuit."
