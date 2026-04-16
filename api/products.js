@@ -25,16 +25,23 @@ module.exports = async (req, res) => {
     
     const products = data.records
       .filter(record => record.fields.Nom) // On ignore les lignes vides
-      .map(record => ({
-        id: record.id,
-        name: record.fields.Nom,
-        price: record.fields.Prix || 0,
-        unite: record.fields.Unite || 'unité',
-        category: record.fields.Categorie || 'Général',
-        tag: record.fields.Tag || '',
-        description: record.fields.Description || '',
-        image: (record.fields.Image && record.fields.Image[0]) ? record.fields.Image[0].url : '/images/facade.jpg'
-      }));
+      .map(record => {
+        const f = record.fields;
+        // Détection flexible de l'image (Photo ou Image)
+        const imageField = f.Photo || f.Image;
+        const imageUrl = (imageField && imageField[0]) ? imageField[0].url : '/images/facade.jpg';
+
+        return {
+          id: record.id,
+          name: f.Nom,
+          price: f.Prix || 0,
+          unite: f.Unite || 'unité',
+          category: f.Categorie || 'Général',
+          tag: f.Tag || '',
+          description: f.Description || '',
+          image: imageUrl
+        };
+      });
 
     res.status(200).json(products);
   } catch (error) {
