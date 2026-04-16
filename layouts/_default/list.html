@@ -34,10 +34,10 @@
       {{ range ($categories | uniq) }}
         {{ $slug := . | urlize }}
         {{ $bg := "/images/facade.jpg" }}
-        {{ if (findRE "Boissons" .) }}{{ $bg = "/images/heineken-pack.png" }}{{ end }}
-        {{ if (findRE "Apéro|Chips" .) }}{{ $bg = "/images/takis-blue-heat.png" }}{{ end }}
+        {{ if (findRE "Boissons|Fraîches" .) }}{{ $bg = "/images/heineken-pack.png" }}{{ end }}
+        {{ if (findRE "Apéro|Chips" .) }}{{ $bg = "/images/lays-nature-xl.png" }}{{ end }}
         {{ if (findRE "Glaces" .) }}{{ $bg = "/images/magnum-amande.png" }}{{ end }}
-        {{ if (findRE "Mixologie|Packs" .) }}{{ $bg = "/images/pack-bleu.jpg" }}{{ end }}
+        {{ if (findRE "Packs|Mixologie" .) }}{{ $bg = "/images/pack-bleu.jpg" }}{{ end }}
         {{ if (findRE "Dépannage" .) }}{{ $bg = "/images/briquet-bic-maxi.png" }}{{ end }}
 
         <a href="#rayon-{{ $slug }}" class="hub-card" data-cat="{{ $slug }}" style="--bg-url: url('{{ $bg }}')">
