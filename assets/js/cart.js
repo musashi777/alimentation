@@ -50,12 +50,33 @@ const Store = {
     getSummary() {
         let total = 0;
         const cartArray = [];
+        let hasAlcohol = false;
+        let hasSnack = false;
+
         this.items.forEach((item, id) => {
             total += item.price * item.quantity;
             cartArray.push({ id, ...item });
+
+            // Détection du contenu pour Smart Bundling
+            const name = item.name.toLowerCase();
+            if (name.includes('vodka') || name.includes('whisky') || name.includes('rhum') || name.includes('gin')) hasAlcohol = true;
+            if (name.includes('chips') || name.includes('cacahuète') || name.includes('doritos')) hasSnack = true;
         });
-        return { cartArray, total };
-    }
+
+        // Génération de suggestions intelligentes
+        let suggestions = [];
+        if (hasAlcohol && !this.items.has('soda_1')) {
+            suggestions.push({ id: 'soda_1', name: 'Coca-Cola 1.5L', price: 4.50, icon: '🥤' });
+        }
+        if (hasSnack && !this.items.has('beer_1')) {
+            suggestions.push({ id: 'beer_1', name: 'Heineken x6', price: 11.50, icon: '🍺' });
+        }
+        if (total > 0 && !this.items.has('home_1')) {
+            suggestions.push({ id: 'home_1', name: 'Briquet BIC', price: 2.50, icon: '🔥' });
+        }
+
+        return { cartArray, total, suggestions };
+    },
 };
 
 const UI = {
@@ -103,11 +124,12 @@ const UI = {
     `,
 
     updateCartUI() {
-        const { cartArray, total } = Store.getSummary();
+        const { cartArray, total, suggestions } = Store.getSummary();
         const list = document.getElementById('cart-items');
         const totalEl = document.getElementById('total-price');
         const badge = document.getElementById('cart-count');
         const emptyState = document.getElementById('empty-cart');
+        const suggestionBox = document.querySelector('.suggestion-chips');
 
         // Gestion de l'état vide
         if (emptyState) emptyState.classList.toggle('hidden', cartArray.length > 0);
@@ -127,6 +149,21 @@ const UI = {
                 </li>
             `).join('');
         }
+
+        // Rendu des suggestions dynamiques
+        if (suggestionBox) {
+            if (suggestions.length > 0) {
+                suggestionBox.innerHTML = suggestions.map(s => `
+                    <button class="add-to-cart chip" 
+                            onclick="App.addToCart('${s.id}', '${s.name}', ${s.price})">
+                        ${s.icon} +${s.price.toFixed(2)}€ ${s.name}
+                    </button>
+                `).join('');
+            } else {
+                suggestionBox.innerHTML = '<p class="small">Aucune suggestion pour le moment.</p>';
+            }
+        }
+
         if (totalEl) totalEl.textContent = total.toFixed(2);
         if (badge) badge.textContent = cartArray.reduce((acc, i) => acc + i.quantity, 0);
     },
@@ -138,6 +175,7 @@ const UI = {
         
         const statusEl = document.getElementById('status-indicator');
         const statusText = document.getElementById('status-text');
+        const topBanner = document.querySelector('.top-banner');
         if (!statusEl || !statusText) return;
 
         let isOpen = false;
@@ -147,6 +185,12 @@ const UI = {
             if (hour >= 10 || hour < 2) isOpen = true;
         } else {
             if (hour >= 10 && hour < 22) isOpen = true;
+        }
+
+        // Mode Nuit Dynamique (Après 20h)
+        if (hour >= 20 || hour < 5) {
+            document.body.classList.add('night-mode');
+            if (topBanner) topBanner.innerHTML = '<span>🚀 MODE NUIT ACTIF : Livraison Prioritaire Aubagne Avenue des Goums ⚡</span>';
         }
 
         statusEl.className = isOpen ? "status-online" : "status-offline";
@@ -256,6 +300,7 @@ const App = {
     async sendOrder() {
         const orderType = document.querySelector('input[name="order-type"]:checked')?.value;
         const address = document.getElementById('delivery-address')?.value;
+        const isDrive = document.getElementById('is-drive')?.checked || false;
         const { cartArray, total } = Store.getSummary();
 
         if (orderType === 'delivery' && !address) {
@@ -267,7 +312,7 @@ const App = {
             const res = await fetch('/api/order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cart: cartArray, total, orderType, address })
+                body: JSON.stringify({ cart: cartArray, total, orderType, address, isDrive })
             });
             
             const data = await res.json();
@@ -293,10 +338,12 @@ const App = {
             document.getElementById('cart-summary')?.classList.add('cart-hidden');
         });
 
-        // Toggle Adresse
+        // Toggle Adresse et Option Drive
         document.querySelectorAll('input[name="order-type"]').forEach(r => {
             r.addEventListener('change', (e) => {
-                document.getElementById('address-section')?.classList.toggle('hidden', e.target.value === 'pickup');
+                const isDelivery = e.target.value === 'delivery';
+                document.getElementById('address-section')?.classList.toggle('hidden', !isDelivery);
+                document.getElementById('drive-option')?.classList.toggle('hidden', isDelivery);
             });
         });
 

@@ -65,6 +65,31 @@
     {{ end }}
   </div>
 
+  <!-- SECTION RÉASSURANCE STRATÉGIQUE -->
+  <div class="trust-bar">
+    <div class="trust-item">
+      <span class="trust-icon">💰</span>
+      <div class="trust-text">
+        <strong>0€ Frais de Service</strong>
+        <span>Le prix affiché est le prix payé.</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">✅</span>
+      <div class="trust-text">
+        <strong>Stock Réel</strong>
+        <span>Disponibilité garantie via Airtable.</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">📱</span>
+      <div class="trust-text">
+        <strong>Direct WhatsApp</strong>
+        <span>Échangez avec nous en direct.</span>
+      </div>
+    </div>
+  </div>
+
   <div class="store-layout">
     {{ $all_products := .Site.Data.products.records }}
     {{ range ($categories | uniq) }}
@@ -110,7 +135,13 @@
         </label>
         <label class="radio-label">
           <input type="radio" name="order-type" value="pickup">
-          <span>🏃 Récupérer sur place (Aubagne)</span>
+          <span>🏃 Retrait (38 Goums)</span>
+        </label>
+      </div>
+      <div id="drive-option" class="drive-checkbox hidden">
+        <label class="checkbox-label">
+          <input type="checkbox" id="is-drive">
+          <span>🚗 Je suis en voiture (Arrêt minute)</span>
         </label>
       </div>
     </div>

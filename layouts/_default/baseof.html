@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Site.Title }}</title>
     
+    <!-- SEO Local : Schéma JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GroceryStore",
+      "name": "A 'LIM G - Alimentation Aubagne",
+      "image": "{{ .Site.BaseURL }}images/facade.jpg",
+      "@id": "{{ .Site.BaseURL }}",
+      "url": "{{ .Site.BaseURL }}",
+      "telephone": "+33600000000",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "38 Avenue des Goums",
+        "addressLocality": "Aubagne",
+        "postalCode": "13400",
+        "addressCountry": "FR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 43.2921,
+        "longitude": 5.5642
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Sunday"],
+          "opens": "10:00",
+          "closes": "22:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Friday", "Saturday"],
+          "opens": "10:00",
+          "closes": "02:00"
+        }
+      ]
+    }
+    </script>
+    
     <!-- PWA Config -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#111827">
@@ -34,6 +73,9 @@
     <header>
         <div class="header-container">
             <h1 class="logo">A 'LIM G - Aubagne</h1>
+            <div class="header-address">
+                📍 38 Avenue des Goums, 13400 Aubagne
+            </div>
         </div>
     </header>
 

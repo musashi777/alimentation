@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, { error: 'Method Not Allowed' });
 
   const { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, WHATSAPP_NUMBER } = process.env;
-  const { cart, total, orderType, address } = req.body;
+  const { cart, total, orderType, address, isDrive } = req.body;
 
   // Validation des entrées
   if (!cart || !total || !orderType) return send(res, 400, { error: 'Données de commande incomplètes' });
@@ -23,18 +23,23 @@ module.exports = async (req, res) => {
       return send(res, 400, { error: 'Incohérence de prix détectée' });
     }
 
-    // Étape 2 : Construction du message WhatsApp
-    let message = `*🛒 NOUVELLE COMMANDE A 'LIM G*\n`;
-    message += `---------------------------\n`;
-    message += `*Type :* ${orderType === 'delivery' ? '🚚 Livraison' : '🏃 Retrait'}\n`;
-    if (orderType === 'delivery') message += `*📍 Adresse :* ${address}\n`;
-    message += `---------------------------\n\n`;
+    // Étape 2 : Construction du message WhatsApp (Structure Opérationnelle)
+    const orderId = Math.random().toString(36).substr(2, 6).toUpperCase();
+    let message = `📦 *COMMANDE #${orderId}* ${isDrive ? '🚗 [EN VOITURE]' : ''}\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `👤 *Client :* [Nom]\n`;
+    message += `🕒 *Heure :* ${new Date().toLocaleTimeString('fr-FR', {hour: '2d', minute:'2d'})}\n`;
+    message += `📍 *Type :* ${orderType === 'delivery' ? '🚚 LIVRAISON' : '🏃 RETRAIT (38 Goums)'}\n`;
+    if (orderType === 'delivery') message += `🏠 *Adresse :* ${address}\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
     message += cart.map(item => 
-      `• ${item.name} x${item.quantity} (${(item.price * item.quantity).toFixed(2)}€)`
+      `✅ ${item.quantity}x ${item.name}`
     ).join('\n');
 
-    message += `\n\n*💰 TOTAL : ${computedTotal.toFixed(2)}€*`;
+    message += `\n\n💰 *TOTAL À PAYER : ${computedTotal.toFixed(2)}€*`;
+    message += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `⚠️ _Paiement à la réception_`;
 
     // Étape 3 : Archivage Airtable (Optionnel mais sécurisé)
     let airtableRecordId = 'OFFLINE';

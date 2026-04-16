@@ -1,11 +1,11 @@
 {
-  "name": "A 'LIM G - Aubagne",
+  "name": "A 'LIM G - Alimentation Aubagne",
   "short_name": "A 'LIM G",
-  "description": "Alimentation et Livraison de nuit à Aubagne",
+  "description": "Votre alimentation de proximité et livraison de nuit au 38 Avenue des Goums, Aubagne.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111827",
-  "theme_color": "#10B981",
+  "theme_color": "#111827",
   "icons": [
     {
       "src": "/images/facade.jpg",
