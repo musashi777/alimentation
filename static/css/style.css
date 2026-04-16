@@ -400,3 +400,54 @@ body.night-mode .product-card { background-color: #1f2937; border-color: #374151
   border-color: var(--primary-color);
   transform: translateY(-2px);
 }
+
+/* Category Hub Modernisé */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.hub-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.8rem 1rem;
+  background: var(--card-bg);
+  border-radius: 24px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.hub-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-url);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4;
+  filter: blur(0.5px);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.hub-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 15, 25, 0.3) 0%, rgba(11, 15, 25, 0.9) 100%);
+  z-index: 1;
+}
+
+.hub-card:active { transform: scale(0.95); }
+.hub-card:hover::before { transform: scale(1.15); opacity: 0.6; }
+
+.hub-icon, .hub-label { position: relative; z-index: 2; }
+.hub-icon { font-size: 2.4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+.hub-label { font-size: 0.95rem; font-weight: 800; color: var(--white); letter-spacing: 0.2px; text-transform: capitalize; }
