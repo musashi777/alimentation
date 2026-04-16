@@ -5,16 +5,23 @@ module.exports = async (req, res) => {
   const TABLE_NAME = 'Produits';
 
   if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
+    console.error('ERREUR : AIRTABLE_API_KEY ou AIRTABLE_BASE_ID non définis dans Vercel.');
     return res.status(500).json({ error: 'Configuration API manquante' });
   }
 
   try {
-    // Tentative de récupération avec filtre, sinon sans filtre
     const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_NAME}`;
+    console.log(`Tentative d'accès à Airtable : ${url}`);
     
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
     });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`Airtable a renvoyé une erreur (${response.status}) : ${errText}`);
+      throw new Error(`Airtable API error: ${response.status}`);
+    }
 
     const data = await response.json();
 
@@ -29,7 +36,17 @@ module.exports = async (req, res) => {
         const f = record.fields;
         // Détection flexible de l'image (Photo ou Image)
         const imageField = f.Photo || f.Image;
-        const imageUrl = (imageField && imageField[0]) ? imageField[0].url : '/images/facade.jpg';
+        let imageUrl = '/images/facade.jpg';
+
+        if (imageField) {
+          if (Array.isArray(imageField) && imageField[0] && imageField[0].url) {
+            // C'est un attachement Airtable (URL temporaire)
+            imageUrl = imageField[0].url;
+          } else if (typeof imageField === 'string') {
+            // C'est un nom de fichier local (ex: 'briquet.png')
+            imageUrl = imageField.startsWith('/') ? imageField : `/images/${imageField}`;
+          }
+        }
 
         return {
           id: record.id,

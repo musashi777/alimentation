@@ -89,7 +89,24 @@ const UI = {
 
         Object.entries(grouped).forEach(([cat, items]) => {
             const sectionId = `rayon-${this.slugify(cat)}`;
-            const section = document.getElementById(sectionId);
+            let section = document.getElementById(sectionId);
+            
+            // Si la catégorie n'existe pas dans le HTML statique (nouveauté Airtable)
+            if (!section) {
+                const layout = document.querySelector('.store-layout');
+                if (layout) {
+                    const newSection = document.createElement('section');
+                    newSection.id = sectionId;
+                    newSection.className = 'category-section';
+                    newSection.innerHTML = `
+                        <h2 class="category-title">🆕 ${cat}</h2>
+                        <div class="product-grid"></div>
+                    `;
+                    layout.appendChild(newSection);
+                    section = newSection;
+                }
+            }
+
             if (!section) return;
 
             const grid = section.querySelector('.product-grid');
