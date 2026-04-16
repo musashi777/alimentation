@@ -74,12 +74,16 @@ module.exports = async (req, res) => {
 
     // Étape 4 : Génération de l'URL finale
     const finalMessage = message + `\n\n*Ref :* ${airtableRecordId}`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(finalMessage)}`;
+    const phone = WHATSAPP_NUMBER || "33600000000";
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(finalMessage)}`;
 
     return send(res, 200, { whatsappUrl, reference: airtableRecordId });
 
   } catch (error) {
     console.error('API Order Error:', error);
-    return send(res, 500, { error: 'Une erreur est survenue lors du traitement' });
+    // En cas d'erreur, on essaie quand même de générer un lien WhatsApp de secours
+    const fallbackMsg = `*⚠️ ERREUR SYSTÈME - COMMANDE MANUELLE*\nMerci de nous contacter directement.`;
+    const fallbackUrl = `https://wa.me/${WHATSAPP_NUMBER || "33600000000"}?text=${encodeURIComponent(fallbackMsg)}`;
+    return send(res, 200, { whatsappUrl: fallbackUrl, error: 'Traitement dégradé' });
   }
 };
