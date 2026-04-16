@@ -39,11 +39,26 @@ module.exports = async (req, res) => {
         let imageUrl = '/images/facade.jpg';
 
         if (imageField) {
-          if (Array.isArray(imageField) && imageField[0] && imageField[0].url) {
-            // C'est un attachement Airtable (URL temporaire)
-            imageUrl = imageField[0].url;
+          if (Array.isArray(imageField) && imageField[0]) {
+            const file = imageField[0];
+            // On récupère le nom du fichier (ex: 'Mogu_Mogu_Fraise.png')
+            const filename = file.filename || '';
+            
+            // Liste des images que nous avons en local dans /static/images/
+            const localImages = [
+              'Briquet_Clipper.png', 'Mogu_Mogu_Fraise.png', 
+              'Red_Bull_Original.png', 'takis-blue-heat.png', 
+              'pack-bleu.jpg', 'facade.jpg'
+            ];
+
+            if (localImages.includes(filename)) {
+              // Si on l'a en local, on utilise le chemin local (ultra-rapide et permanent)
+              imageUrl = `/images/${filename}`;
+            } else if (file.url) {
+              // Sinon, on utilise l'URL Airtable (en dernier recours)
+              imageUrl = file.url;
+            }
           } else if (typeof imageField === 'string') {
-            // C'est un nom de fichier local (ex: 'briquet.png')
             imageUrl = imageField.startsWith('/') ? imageField : `/images/${imageField}`;
           }
         }
