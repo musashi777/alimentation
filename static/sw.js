@@ -1,21 +1,27 @@
-const CACHE_NAME = 'alimg-v1';
-const ASSETS = [
-  '/',
-  '/css/style.css',
-  '/manifest.json',
-  '/images/facade.jpg'
-];
+const CACHE_NAME = 'alimg-v2-' + Date.now(); // Version dynamique pour forcer la mise à jour
 
 self.addEventListener('install', (event) => {
+  // Force le Service Worker à devenir actif immédiatement
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  // Supprime tous les anciens caches
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          console.log('Suppression du cache :', cacheName);
+          return caches.delete(cacheName);
+        })
+      );
+    }).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
+  // Stratégie : Réseau d'abord, pour être sûr d'avoir les prix frais
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
