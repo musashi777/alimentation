@@ -252,6 +252,13 @@ const App = {
         // Tentative de chargement via API (Airtable) avec anti-cache
         try {
             const res = await fetch(`/api/products?t=${Date.now()}`);
+            const contentType = res.headers.get("content-type");
+            
+            // Si Vercel renvoie du HTML, c'est que l'accès est bloqué par une page de login
+            if (contentType && contentType.indexOf("text/html") !== -1) {
+                throw new Error("ACCÈS BLOQUÉ PAR VERCEL (Vérifiez Deployment Protection)");
+            }
+
             if (res.ok) {
                 const products = await res.json();
                 UI.renderProducts(products);
@@ -259,12 +266,11 @@ const App = {
             }
             throw new Error("API Indisponible");
         } catch (e) {
-            console.warn("Mode Fallback : Utilisation des données locales Hugo");
-            // Si l'API échoue, on utilise les données injectées par Hugo (O(1) car déjà en mémoire)
+            console.warn("Erreur API :", e.message);
+            UI.showToast("Mode hors-ligne : Données statiques activées");
+            // Si l'API échoue, on utilise les données injectées par Hugo
             if (window.HUGO_PRODUCTS && window.HUGO_PRODUCTS.length > 0) {
                 UI.renderProducts(window.HUGO_PRODUCTS);
-            } else {
-                UI.showToast("Erreur de chargement des produits");
             }
         }
     },
