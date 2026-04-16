@@ -52,14 +52,14 @@ module.exports = async (req, res) => {
             ];
 
             if (localImages.includes(filename)) {
-              // Si on l'a en local, on utilise le chemin local (ultra-rapide et permanent)
-              imageUrl = `/images/${filename}`;
+              // Si on l'a en local, on utilise le chemin à la racine (plus robuste avec Hugo sur Vercel)
+              imageUrl = `/${filename}`;
             } else if (file.url) {
               // Sinon, on utilise l'URL Airtable (en dernier recours)
               imageUrl = file.url;
             }
           } else if (typeof imageField === 'string') {
-            imageUrl = imageField.startsWith('/') ? imageField : `/images/${imageField}`;
+            imageUrl = imageField.startsWith('/') ? imageField : `/${imageField}`;
           }
         }
 
