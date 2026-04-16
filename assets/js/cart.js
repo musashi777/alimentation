@@ -249,9 +249,9 @@ const App = {
     },
 
     async loadProducts() {
-        // Tentative de chargement via API (Airtable)
+        // Tentative de chargement via API (Airtable) avec anti-cache
         try {
-            const res = await fetch('/api/products');
+            const res = await fetch(`/api/products?t=${Date.now()}`);
             if (res.ok) {
                 const products = await res.json();
                 UI.renderProducts(products);
