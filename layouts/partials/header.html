@@ -1,22 +1,13 @@
-<!--
-  =============================================================================
-  HEADER PARTIEL - HEADER.HTML
-  =============================================================================
-  Ce fichier contient l'en-tête du site affiché sur toutes les pages.
-  Il inclut le logo/nom du site et la navigation principale.
-  Ce partial est inclus dans baseof.html.
-  =============================================================================
--->
-<header>
-    <nav>
-        <!-- Logo / Nom du site - lien vers l'accueil -->
-        <a href="/">{{ .Site.Title }}</a>
-        
-        <!-- Menu de navigation principal -->
-        <ul>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="#products">Produits</a></li>
-            <li><a href="#cart-summary">Panier</a></li>
-        </ul>
-    </nav>
+<header class="glass">
+    <div class="container header-container">
+        <div class="brand-info">
+            <h1 class="logo">{{ .Site.Title }}</h1>
+            <p class="header-location">📍 38 Avenue des Goums, 13400 Aubagne</p>
+        </div>
+        <div class="status-pill">
+            <div id="status-indicator" class="status-offline">
+                <span class="dot"></span> <span id="status-text">Vérification...</span>
+            </div>
+        </div>
+    </div>
 </header>

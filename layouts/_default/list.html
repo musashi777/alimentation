@@ -1,20 +1,17 @@
 {{ define "main" }}
 <!-- Injection des données locales pour Fallback O(1) -->
 <script>
-    window.HUGO_PRODUCTS = [
-        {{ range .Site.Data.products.records }}
-        {
-            id: {{ .id }},
-            name: {{ .fields.Nom }},
-            price: {{ .fields.Prix }},
-            unite: {{ .fields.Unite }},
-            category: {{ .fields.Categorie }},
-            tag: {{ .fields.Tag | default "" }},
-            description: {{ .fields.Description | default "" }},
-            image: {{ .fields.Image }}
-        },
-        {{ end }}
-    ];
+    // Injection propre et mapping O(1) vers le format attendu par App.js
+    window.HUGO_PRODUCTS = {{ .Site.Data.products.records | jsonify | safeJS }}.map(r => ({
+        id: r.id,
+        name: r.fields.Nom,
+        price: r.fields.Prix,
+        unite: r.fields.Unite,
+        category: r.fields.Categorie,
+        tag: r.fields.Tag || "",
+        description: r.fields.Description || "",
+        image: r.fields.Image
+    }));
 </script>
 
 <div class="container">
@@ -22,14 +19,11 @@
     <div class="alert-banner">
         🚨 BOUTIQUE FERMÉE À 22H / LIVRAISON DISPONIBLE TOUTE LA NUIT
     </div>
-    <div id="status-indicator" class="status-offline">
-        <span class="dot"></span> <span id="status-text">Vérification...</span>
-    </div>
     <h1>La Nuit Continue avec A 'LIM G Aubagne.</h1>
     <p>Ne coupez pas votre élan : Packs Mixologie, Snacking et Épicerie livrés en 15 min.</p>
   </section>
 
-  <!-- NOUVEAU : Hub d'Exploration Visuel -->
+  <!-- NOUVEAU : Hub d'Exploration Visuel (Mapping Cohérent) -->
   <div class="category-hub">
     <h2 class="section-subtitle">Explorer les rayons</h2>
     <div class="hub-grid">
@@ -38,12 +32,14 @@
         {{ $categories = $categories | append .fields.Categorie }}
       {{ end }}
       {{ range ($categories | uniq) }}
-        <a href="#rayon-{{ . | urlize }}" class="hub-card" data-cat="{{ . | urlize }}">
+        {{ $slug := . | urlize }}
+        <a href="#rayon-{{ $slug }}" class="hub-card" data-cat="{{ $slug }}">
           <span class="hub-icon">
-            {{ if eq . "Boissons Fraîches" }}🍺{{ end }}
-            {{ if eq . "Apéro & Chips" }}🍟{{ end }}
-            {{ if eq . "Glaces & Fraîcheur" }}🍦{{ end }}
-            {{ if eq . "Comptoir" }}🔥{{ end }}
+            {{ if (findRE "Boissons" .) }}🍺{{ end }}
+            {{ if (findRE "Apéro|Chips" .) }}🍟{{ end }}
+            {{ if (findRE "Glaces" .) }}🍦{{ end }}
+            {{ if (findRE "Mixologie|Packs" .) }}🍹{{ end }}
+            {{ if (findRE "Dépannage|Comptoir" .) }}📦{{ end }}
           </span>
           <span class="hub-label">{{ . }}</span>
         </a>
@@ -51,21 +47,23 @@
     </div>
   </div>
 
-  <!-- Barre de Rayons Sticky (S'affiche au scroll) -->
+  <!-- Barre de Rayons Sticky -->
   <div class="filter-bar" id="filter-bar">
     <a href="#rayon-all" class="filter-btn active">Tout</a>
     {{ range ($categories | uniq) }}
-      <a href="#rayon-{{ . | urlize }}" class="filter-btn">
-        {{ if eq . "Boissons Fraîches" }}🍺{{ end }}
-        {{ if eq . "Apéro & Chips" }}🍟{{ end }}
-        {{ if eq . "Glaces & Fraîcheur" }}🍦{{ end }}
-        {{ if eq . "Comptoir" }}🔥{{ end }}
-        {{ . }}
+      {{ $slug := . | urlize }}
+      <a href="#rayon-{{ $slug }}" class="filter-btn">
+          {{ if (findRE "Boissons" .) }}🍺{{ end }}
+          {{ if (findRE "Apéro|Chips" .) }}🍟{{ end }}
+          {{ if (findRE "Glaces" .) }}🍦{{ end }}
+          {{ if (findRE "Mixologie|Packs" .) }}🍹{{ end }}
+          {{ if (findRE "Dépannage|Comptoir" .) }}📦{{ end }}
+          {{ . }}
       </a>
     {{ end }}
   </div>
 
-  <!-- SECTION RÉASSURANCE STRATÉGIQUE -->
+  <!-- SECTION RÉASSURANCE STRATÉGIQUE (UNIFIÉE) -->
   <div class="trust-bar">
     <div class="trust-item">
       <span class="trust-icon">💰</span>
@@ -91,23 +89,19 @@
   </div>
 
   <div class="store-layout">
-    {{ $all_products := .Site.Data.products.records }}
     {{ range ($categories | uniq) }}
-    {{ $current_cat := . }}
-    <section id="rayon-{{ . | urlize }}" class="category-section">
+    {{ $slug := . | urlize }}
+    <section id="rayon-{{ $slug }}" class="category-section">
       <h2 class="category-title">
-        {{ if eq . "Boissons Fraîches" }}🍺{{ end }}
-        {{ if eq . "Apéro & Chips" }}🍟{{ end }}
-        {{ if eq . "Glaces & Fraîcheur" }}🍦{{ end }}
-        {{ if eq . "Comptoir" }}🔥{{ end }}
-        {{ . }}
+          {{ if (findRE "Boissons" .) }}🍺{{ end }}
+          {{ if (findRE "Apéro|Chips" .) }}🍟{{ end }}
+          {{ if (findRE "Glaces" .) }}🍦{{ end }}
+          {{ if (findRE "Mixologie|Packs" .) }}🍹{{ end }}
+          {{ if (findRE "Dépannage|Comptoir" .) }}📦{{ end }}
+          {{ . }}
       </h2>
       <div class="product-grid">
-        <!-- Skeletons de chargement (Remplacés par le JS) -->
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
+        <!-- Rendu dynamique JS ici -->
       </div>
     </section>
     {{ end }}

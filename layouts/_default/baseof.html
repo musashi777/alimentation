@@ -57,6 +57,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Age Gate (Protection légale O(1)) -->
     <div id="age-gate" class="modal-hidden">
         <div class="modal-content">
             <span class="icon">🔞</span>
@@ -67,29 +68,25 @@
         </div>
     </div>
 
+    <!-- Bannière Dynamique -->
     <div class="top-banner">
         <span>🏃💨 Commande prête en 15 min ! Cliquez, passez, récupérez.</span>
     </div>
-    <header>
-        <div class="header-container">
-            <h1 class="logo">A 'LIM G - Aubagne</h1>
-            <div class="header-address">
-                📍 38 Avenue des Goums, 13400 Aubagne
-            </div>
-        </div>
-    </header>
 
-    <main>
+    <!-- En-tête Unifié -->
+    {{ partial "header.html" . }}
+
+    <main id="main-content">
         {{ block "main" . }}{{ end }}
     </main>
 
-    <!-- Barre de Navigation Mobile -->
+    <!-- Navigation Basse (Mobile First) -->
     <nav class="bottom-nav">
         <a href="/" class="nav-item active">
             <span class="icon">🏠</span>
             <span class="label">Accueil</span>
         </a>
-        <a href="#filter-bar" class="nav-item">
+        <a href="#rayon-all" class="nav-item">
             <span class="icon">📂</span>
             <span class="label">Rayons</span>
         </a>

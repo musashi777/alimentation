@@ -120,18 +120,22 @@ const UI = {
     },
 
     slugify: (s) => s.toLowerCase()
-        .replace(/[🍹🍺🍟🍦🔥\s]/g, '-')
-        .replace(/-+/g, '-')
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Enlève les accents
+        .replace(/[🍹🍺🍟🍦🔥📦🍹📂🏠🛒\s]/g, '-') // Remplace emojis et espaces par tirets
+        .replace(/[^a-z0-9-]/g, '') // Enlève tout ce qui n'est pas alphanumérique ou tiret
+        .replace(/-+/g, '-') // Évite les doubles tirets
+        .replace(/^-+|-+$/g, ''), // Nettoie les extrémités
 
     productTemplate: (p) => {
-        // Anti-cache pour les images pendant les tests (optionnel, mais utile ici)
-        const imgSrc = p.image.startsWith('/images/') ? p.image : p.image;
+        // Fallback pour les images manquantes ou brisées
+        const imgSrc = p.image || '/images/facade.jpg';
         
         return `
         <div class="product-card" data-id="${p.id}">
             ${p.tag ? `<span class="badge">${p.tag}</span>` : ''}
-            <div class="product-image" style="background-image: url('${imgSrc}'); background-size: cover; background-position: center;"></div>
+            <div class="product-image-container">
+                <img src="${imgSrc}" alt="${p.name}" class="product-img" loading="lazy">
+            </div>
             <div class="product-info">
                 <h3>${p.name}</h3>
                 ${p.description ? `<p class="description">${p.description}</p>` : ''}

@@ -57,33 +57,91 @@ body {
   z-index: 2000;
 }
 
+/* Header Premium (O(1) Performance) */
 header {
-  background-color: var(--primary-color);
-  color: var(--white);
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.hero {
-  text-align: center;
-  margin-bottom: 3rem;
-  padding: 6rem 1rem;
-  background: linear-gradient(rgba(11, 15, 25, 0.4), rgba(11, 15, 25, 0.9)), url('/images/facade.jpg');
-  background-size: cover;
-  background-position: center;
-  border-radius: 24px;
-  border: 1px solid var(--border);
-  text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.hero h1 {
-  font-size: 2.8rem;
+.logo {
+  font-size: 1.5rem;
   font-weight: 800;
-  color: var(--white);
+  margin: 0;
+  background: linear-gradient(90deg, var(--primary-color), #34D399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: -1px;
-  margin-bottom: 0.5rem;
 }
+
+.header-location {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+}
+
+/* Status Pill */
+.status-pill {
+  display: flex;
+  align-items: center;
+}
+
+#status-indicator {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+}
+
+/* Amélioration Navigation Basse */
+.bottom-nav {
+  box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+}
+
+.nav-item:active {
+  transform: scale(0.9);
+  transition: transform 0.1s;
+}
+
+/* Âge Gate Stylisé */
+#age-gate {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#age-gate .modal-content {
+  background: #111827;
+  padding: 2.5rem;
+  border-radius: 24px;
+  text-align: center;
+  max-width: 320px;
+  border: 1px solid var(--border);
+}
+
+#age-gate .icon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+#age-gate h2 { font-size: 1.5rem; margin-bottom: 1rem; color: white; }
+#age-gate p { font-size: 0.9rem; color: #9CA3AF; margin-bottom: 2rem; }
+
+.modal-hidden { display: none !important; }
 
 /* Category Hub */
 .hub-grid {
@@ -165,11 +223,18 @@ header {
   transition: transform 0.2s;
 }
 
-.product-image {
+.product-image-container {
   height: 140px;
-  background-size: cover;
-  background-position: center;
+  width: 100%;
+  overflow: hidden;
   background-color: #1f2937;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .product-info { padding: 1rem; }

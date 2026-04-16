@@ -6,3 +6,5 @@ resources/
 *.log
 .env
 scripts/migrate.js
+.vercel
+.env*.local

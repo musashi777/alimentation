@@ -1,27 +1,32 @@
-const CACHE_NAME = 'alimg-v2-' + Date.now(); // Version dynamique pour forcer la mise à jour
+const CACHE_NAME = 'alim-g-v2';
+const ASSETS = [
+  '/',
+  '/css/style.css',
+  '/js/cart.js',
+  '/images/facade.jpg',
+  '/manifest.json'
+];
 
 self.addEventListener('install', (event) => {
-  // Force le Service Worker à devenir actif immédiatement
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
+  );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
-  // Supprime tous les anciens caches
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          console.log('Suppression du cache :', cacheName);
-          return caches.delete(cacheName);
-        })
-      );
-    }).then(() => self.clients.claim())
-  );
-});
-
 self.addEventListener('fetch', (event) => {
-  // Stratégie : Réseau d'abord, pour être sûr d'avoir les prix frais
+  // Stratégie Stale-While-Revalidate : On affiche le cache et on met à jour en arrière-plan
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        fetch(event.request).then((networkResponse) => {
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+        });
+        return cachedResponse;
+      }
+      return fetch(event.request);
+    })
   );
 });
