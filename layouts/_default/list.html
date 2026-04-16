@@ -46,7 +46,7 @@
             {{ if (findRE "Apéro|Chips" .) }}🍟{{ end }}
             {{ if (findRE "Glaces" .) }}🍦{{ end }}
             {{ if (findRE "Mixologie|Packs" .) }}🍹{{ end }}
-            {{ if (findRE "Dépannage|Comptoir" .) }}📦{{ end }}
+            {{ if (findRE "Dépannage" .) }}📦{{ end }}
           </span>
           <span class="hub-label">{{ . }}</span>
         </a>
@@ -63,8 +63,8 @@
           {{ if (findRE "Boissons" .) }}🍺{{ end }}
           {{ if (findRE "Apéro|Chips" .) }}🍟{{ end }}
           {{ if (findRE "Glaces" .) }}🍦{{ end }}
-          {{ if (findRE "Mixologie|Packs" .) }}🍹{{ end }}
-          {{ if (findRE "Dépannage|Comptoir" .) }}📦{{ end }}
+          {{ if (findRE "Packs" .) }}🍹{{ end }}
+          {{ if (findRE "Dépannage" .) }}📦{{ end }}
           {{ . }}
       </a>
     {{ end }}
@@ -103,8 +103,8 @@
           {{ if (findRE "Boissons" .) }}🍺{{ end }}
           {{ if (findRE "Apéro|Chips" .) }}🍟{{ end }}
           {{ if (findRE "Glaces" .) }}🍦{{ end }}
-          {{ if (findRE "Mixologie|Packs" .) }}🍹{{ end }}
-          {{ if (findRE "Dépannage|Comptoir" .) }}📦{{ end }}
+          {{ if (findRE "Packs" .) }}🍹{{ end }}
+          {{ if (findRE "Dépannage" .) }}📦{{ end }}
           {{ . }}
       </h2>
       <div class="product-grid">

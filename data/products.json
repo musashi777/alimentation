@@ -1,13 +1,13 @@
 {
   "records": [
-    { "id": "pack_1", "fields": { "Nom": "Pack \"Le Bleu\"", "Prix": 12.90, "Unite": "pack", "Image": "/images/pack-bleu.jpg", "Categorie": "🍹 Packs Mixologie", "Tag": "Best-Seller", "Description": "1 Flash Vodka 20cl + Haribo 120g + 2 Red Bull 25cl" }},
+    { "id": "pack_1", "fields": { "Nom": "Pack \"Le Bleu\"", "Prix": 12.90, "Unite": "pack", "Image": "/images/pack-bleu.jpg", "Categorie": "Packs Mixologie", "Tag": "Best-Seller", "Description": "1 Flash Vodka 20cl + Haribo 120g + 2 Red Bull 25cl" }},
     { "id": "taki_1", "fields": { "Nom": "Takis Blue Heat", "Prix": 3.90, "Unite": "sac", "Image": "/images/takis-blue-heat.png", "Categorie": "Apéro & Chips", "Tag": "🔥 HYPE", "Description": "Les chips bleues virales ultra-pimentées." }},
     { "id": "mogu_1", "fields": { "Nom": "Mogu Mogu Fraise", "Prix": 1.90, "Unite": "320ml", "Image": "/images/Mogu_Mogu_Fraise.png", "Categorie": "Boissons Fraîches", "Tag": "🍃 Frais", "Description": "Boisson avec morceaux de nata de coco." }},
     { "id": "rb_1", "fields": { "Nom": "Red Bull Original", "Prix": 1.90, "Unite": "250ml", "Image": "/images/Red_Bull_Original.png", "Categorie": "Boissons Fraîches", "Tag": "🚀 Énergie", "Description": "L'indispensable pour vos soirées." }},
-    { "id": "clip_1", "fields": { "Nom": "Briquet Clipper", "Prix": 1.50, "Unite": "unité", "Image": "/images/Briquet_Clipper.png", "Categorie": "📦 Dépannage", "Tag": "🔥 Collection", "Description": "Le briquet rechargeable préféré." }},
+    { "id": "clip_1", "fields": { "Nom": "Briquet Clipper", "Prix": 1.50, "Unite": "unité", "Image": "/images/Briquet_Clipper.png", "Categorie": "Dépannage", "Tag": "🔥 Collection", "Description": "Le briquet rechargeable préféré." }},
     { "id": "beer_1", "fields": { "Nom": "Heineken Pack (6x25cl)", "Prix": 5.00, "Unite": "pack", "Image": "/images/Heineken-Pack-6x25cl.png", "Categorie": "Boissons Fraîches", "Tag": "🔥 PROMO" }},
     { "id": "chips_1", "fields": { "Nom": "Lay's Nature XL", "Prix": 2.50, "Unite": "sac", "Image": "/images/Lays-Nature-XL.png", "Categorie": "Apéro & Chips", "Tag": "Essentiel" }},
     { "id": "ice_1", "fields": { "Nom": "Magnum Amande (x4)", "Prix": 5.90, "Unite": "boîte", "Image": "/images/Magnum-Amande(4).png", "Categorie": "Glaces", "Tag": "Été 2026" }},
-    { "id": "home_1", "fields": { "Nom": "Briquet BIC Maxi", "Prix": 1.90, "Unite": "unité", "Image": "/images/Briquet-BIC-Maxi.png", "Categorie": "📦 Dépannage", "Tag": "Utile" }}
+    { "id": "home_1", "fields": { "Nom": "Briquet BIC Maxi", "Prix": 1.90, "Unite": "unité", "Image": "/images/Briquet-BIC-Maxi.png", "Categorie": "Dépannage", "Tag": "Utile" }}
   ]
 }
