@@ -120,11 +120,10 @@ const UI = {
     },
 
     slugify: (s) => s.toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Enlève les accents
-        .replace(/[🍹🍺🍟🍦🔥📦🍹📂🏠🛒\s]/g, '-') // Remplace emojis et espaces par tirets
-        .replace(/[^a-z0-9-]/g, '') // Enlève tout ce qui n'est pas alphanumérique ou tiret
-        .replace(/-+/g, '-') // Évite les doubles tirets
-        .replace(/^-+|-+$/g, ''), // Nettoie les extrémités
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+        .replace(/[^\w\s-]/g, '') // Supprime emojis et caractères spéciaux
+        .replace(/[\s_]+/g, '-') // Remplace espaces par tirets
+        .replace(/^-+|-+$/g, ''), // Nettoyage O(1)
 
     productTemplate: (p) => {
         // Fallback pour les images manquantes ou brisées
@@ -140,10 +139,11 @@ const UI = {
                 <h3>${p.name}</h3>
                 ${p.description ? `<p class="description">${p.description}</p>` : ''}
                 <p class="price">${p.price.toFixed(2)}€ / ${p.unite}</p>
-                <button class="add-to-cart" 
-                        onclick="App.addToCart('${p.id}', '${p.name}', ${p.price}, '${imgSrc}')">
-                    Ajouter
-                </button>
+                <div class="card-action-box" id="action-${p.id}" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-img="${imgSrc}">
+                    <button class="add-to-cart" onclick="App.addToCart('${p.id}', '${p.name}', ${p.price}, '${imgSrc}')">
+                        Ajouter
+                    </button>
+                </div>
             </div>
         </div>
     `;
@@ -193,6 +193,45 @@ const UI = {
 
         if (totalEl) totalEl.textContent = total.toFixed(2);
         if (badge) badge.textContent = cartArray.reduce((acc, i) => acc + i.quantity, 0);
+
+        // NOUVEAU : Mise à jour du Mini-Carousel Flottant
+        const floatingBar = document.getElementById('floating-cart-bar');
+        const carouselItems = document.getElementById('mini-carousel-items');
+        const floatingBtn = document.getElementById('open-cart-floating');
+        
+        if (floatingBar && carouselItems && floatingBtn) {
+            if (cartArray.length > 0) {
+                floatingBar.classList.add('visible');
+                carouselItems.innerHTML = cartArray.map(i => `<img src="${i.image || '/images/facade.jpg'}" class="mini-cart-img">`).join('');
+                floatingBtn.textContent = `Valider ${total.toFixed(2)}€`;
+            } else {
+                floatingBar.classList.remove('visible');
+            }
+        }
+
+        // NOUVEAU : Synchronisation DOM des boutons Ajouter -> Sélecteur Rapide Quantité O(n) visuel
+        document.querySelectorAll('.card-action-box').forEach(box => {
+            const id = box.dataset.id;
+            if (Store.items.has(id)) {
+                const qty = Store.items.get(id).quantity;
+                box.innerHTML = `
+                    <div class="fast-qty-controls">
+                        <button class="fast-qty-btn" onclick="App.updateQty('${id}', -1)">−</button>
+                        <span class="fast-qty-count">${qty}</span>
+                        <button class="fast-qty-btn" onclick="App.updateQty('${id}', 1)">+</button>
+                    </div>
+                `;
+            } else {
+                const name = box.dataset.name.replace(/'/g, "\\'");
+                const img = box.dataset.img;
+                const price = box.dataset.price;
+                box.innerHTML = `
+                    <button class="add-to-cart" onclick="App.addToCart('${id}', '${name}', ${price}, '${img}')">
+                        Ajouter
+                    </button>
+                `;
+            }
+        });
     },
 
     updateStatus() {
@@ -394,10 +433,29 @@ const App = {
             document.getElementById('cart-overlay')?.classList.remove('cart-overlay-hidden');
         };
 
-        // Navigation mobile
+        // Navigation mobile & carrousel
         document.getElementById('open-cart-mobile')?.addEventListener('click', openCart);
+        document.getElementById('open-cart-floating')?.addEventListener('click', openCart);
         document.getElementById('close-cart')?.addEventListener('click', closeCart);
         document.getElementById('cart-overlay')?.addEventListener('click', closeCart);
+
+        // Recherche DOM O(n) instantanée
+        const searchInput = document.getElementById('product-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                document.querySelectorAll('.product-card').forEach(card => {
+                    const text = card.textContent.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    card.style.display = text.includes(term) ? 'block' : 'none';
+                });
+                
+                // Masquage automatique des catégories vides
+                document.querySelectorAll('.category-section').forEach(section => {
+                    const hasVisible = Array.from(section.querySelectorAll('.product-card')).some(c => c.style.display !== 'none');
+                    section.style.display = hasVisible ? 'block' : 'none';
+                });
+            });
+        }
 
         // Toggle Adresse et Option Drive
         document.querySelectorAll('input[name="order-type"]').forEach(r => {

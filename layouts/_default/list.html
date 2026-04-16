@@ -54,6 +54,12 @@
     </div>
   </div>
 
+  <!-- Barre de Recherche O(1) -->
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="product-search" placeholder="Rechercher une soif, un péché mignon..." autocomplete="off">
+  </div>
+
   <!-- Barre de Rayons Sticky -->
   <div class="filter-bar" id="filter-bar">
     <a href="#rayon-all" class="filter-btn active">Tout</a>
@@ -113,6 +119,14 @@
     </section>
     {{ end }}
   </div>
+</div>
+
+<!-- Mini Carrousel Panier Flottant -->
+<div id="floating-cart-bar">
+  <div class="mini-carousel" id="mini-carousel-items">
+    <!-- Rendu dynamique JS -->
+  </div>
+  <button class="floating-checkout-btn" id="open-cart-floating">Valider 0.00€</button>
 </div>
 
 <div id="cart-overlay" class="cart-overlay-hidden"></div>
